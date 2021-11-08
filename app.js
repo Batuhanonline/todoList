@@ -4,16 +4,12 @@ var items = JSON.parse(localItems);
 
 // myList sınıfından list değişkeni ile eşitledik.
 var list = document.querySelector('#myList');
-
 // Cookies deki veriler çıktı verildi.
 items.forEach(function(item){
     
     createItem(item);
-    
-    console.log(items);
 
 });
-
 
 // listelenmiş olan itemler üzerine tıklanma halinde -checked- sınıfını ekleme yaptık.
 list.addEventListener('click', function(item){
@@ -50,6 +46,7 @@ document.querySelector('#btnCreate').onclick=function(){
 
     // btnCreate basıldığı zaman txtItem değeri boşalsın.
     document.querySelector('#txtItem').value = '';
+    // item diziye ekleniyor.
     items.push(item);
     console.log(items);
     createItem(item);
@@ -60,16 +57,15 @@ document.querySelector('#btnCreate').onclick=function(){
 // deleteAll basıldığı zaman checked kontrol et ve gizle.
 document.querySelector('#deleteAll').onclick = function(){
     var elements = document.querySelectorAll('.checked');
-
+    //var elementsValue = elements.values;
     elements.forEach(function(item){
 
-        item.style.display = 'none';
+        item.style.display = 'none'; 
+        
+        console.log(item.innerHTML);
 
     });
-    
-
 }
-
 
 function createItem(item){
     // items listesindeki elemanları listeleyip atadık
@@ -79,7 +75,6 @@ function createItem(item){
     li.appendChild(t);
     list.appendChild(li);
     
-
     //items listesindeki listelenmiş elemanlara span nesnesi ile close ikonu ekledik
     var span = document.createElement('span');
     var text = document.createTextNode('\u00D7');
@@ -87,11 +82,22 @@ function createItem(item){
     span.appendChild(text);
     li.appendChild(span);
 
-    // span nesnesine tıklanma halinde görünmez hale getirdik.
+    // span nesnesine tıklanma halinde görünmez hale getirdik ve sildik.
     span.onclick = function(){
         var li = this.parentElement;
         li.style.display = 'none';
+        deleteItem(item);
+        console.log(items);
         li.classList.remove('checked');
+    }
+}
+
+function deleteItem(deleteItems){
+    for(i in deleteItems){
+        let itemDelete = items.indexOf(deleteItems);
+        delete (items[itemDelete]);
+        items = items.filter(Boolean);
+        localStorage.setItem('todo', JSON.stringify(items));
     }
 }
 
