@@ -1,4 +1,6 @@
-var items = ['item 1','item 2','item 3','item 4'];
+var localItems = [localStorage.getItem('todo')]
+var items = JSON.parse(localItems);
+
 
 // myList sınıfından list değişkeni ile eşitledik.
 var list = document.querySelector('#myList');
@@ -7,6 +9,8 @@ var list = document.querySelector('#myList');
 items.forEach(function(item){
     
     createItem(item);
+    
+    console.log(items);
 
 });
 
@@ -46,9 +50,11 @@ document.querySelector('#btnCreate').onclick=function(){
 
     // btnCreate basıldığı zaman txtItem değeri boşalsın.
     document.querySelector('#txtItem').value = '';
-    
+    items.push(item);
+    console.log(items);
     createItem(item);
-
+    ///////////////////////////////////////////
+    localStorage.setItem('todo', JSON.stringify(items));
 }
 
 // deleteAll basıldığı zaman checked kontrol et ve gizle.
@@ -60,7 +66,7 @@ document.querySelector('#deleteAll').onclick = function(){
         item.style.display = 'none';
 
     });
-
+    
 
 }
 
@@ -72,6 +78,7 @@ function createItem(item){
     li.className = 'list-group-item';
     li.appendChild(t);
     list.appendChild(li);
+    
 
     //items listesindeki listelenmiş elemanlara span nesnesi ile close ikonu ekledik
     var span = document.createElement('span');
@@ -87,3 +94,5 @@ function createItem(item){
         li.classList.remove('checked');
     }
 }
+
+//localStorage.clear();
