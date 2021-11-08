@@ -1,11 +1,11 @@
+// localStroge dan verileri alıp items değişkeninin içine ayrıştırıldı.
 var localItems = [localStorage.getItem('todo')]
 var items = JSON.parse(localItems);
-
 
 // myList sınıfından list değişkeni ile eşitledik.
 var list = document.querySelector('#myList');
 
-
+// Cookies deki veriler çıktı verildi.
 items.forEach(function(item){
     
     createItem(item);
@@ -53,7 +53,7 @@ document.querySelector('#btnCreate').onclick=function(){
     items.push(item);
     console.log(items);
     createItem(item);
-    ///////////////////////////////////////////
+    // İtems değişkeninin içindeki verileri todo anahtar kelimesi ile localStroge içine atıyoruz.
     localStorage.setItem('todo', JSON.stringify(items));
 }
 
