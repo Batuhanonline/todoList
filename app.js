@@ -5,10 +5,8 @@ var items = JSON.parse(localItems);
 // myList sınıfından list değişkeni ile eşitledik.
 var list = document.querySelector('#myList');
 // Cookies deki veriler çıktı verildi.
-items.forEach(function(item){
-    
+items.forEach(function(item){   
     createItem(item);
-
 });
 
 // listelenmiş olan itemler üzerine tıklanma halinde -checked- sınıfını ekleme yaptık.
@@ -18,22 +16,18 @@ list.addEventListener('click', function(item){
         item.target.classList.toggle('checked');
         ToogleDeleteButton();
     }
-
 });
 
 // seçilmiş nesnelerin sayısını alıp sıfırdan büyükse delete all butonunu aktif, değilse pasif duruma geçiriyoruz.
 function ToogleDeleteButton(){
 
     var checkedList = document.querySelectorAll('.list-group-item.checked');
-
     if(checkedList.length>0){
         document.querySelector('#deleteAll').classList.remove('d-none');
     }else{
         document.querySelector('#deleteAll').classList.add('d-none');
     }
-
 }
-
 // İnput girişinini kontrol edip createItem fonksiyonunu çağırıyor.
 document.querySelector('#btnCreate').onclick=function(){
 
@@ -48,21 +42,17 @@ document.querySelector('#btnCreate').onclick=function(){
     document.querySelector('#txtItem').value = '';
     // item diziye ekleniyor.
     items.push(item);
-    console.log(items);
     createItem(item);
-    // İtems değişkeninin içindeki verileri todo anahtar kelimesi ile localStroge içine atıyoruz.
-    localStorage.setItem('todo', JSON.stringify(items));
+    updateItems();
 }
 
-// deleteAll basıldığı zaman checked kontrol et ve gizle.
+// deleteAll basıldığı zaman checked kontrol et, gizle ve sil.
 document.querySelector('#deleteAll').onclick = function(){
     var elements = document.querySelectorAll('.checked');
-    //var elementsValue = elements.values;
     elements.forEach(function(item){
 
         item.style.display = 'none'; 
-        
-        console.log(item.innerHTML);
+        deleteItem(item.innerHTML);
 
     });
 }
@@ -78,16 +68,26 @@ function createItem(item){
     //items listesindeki listelenmiş elemanlara span nesnesi ile close ikonu ekledik
     var span = document.createElement('span');
     var text = document.createTextNode('\u00D7');
-    span.className = 'close';
+    span.className = 'close btn btn-danger';
     span.appendChild(text);
     li.appendChild(span);
+
+    // List elemanına tıklandığı zaman span nesnesi aktif-daktif duruma geçiyor.
+    li.onclick = function(){
+        
+        if(this.className === ('list-group-item')){
+            li.removeChild(span);
+            li.id = 'checked';
+        }else if(this.id === ('checked')){
+            li.appendChild(span);
+        }  
+    }
 
     // span nesnesine tıklanma halinde görünmez hale getirdik ve sildik.
     span.onclick = function(){
         var li = this.parentElement;
         li.style.display = 'none';
         deleteItem(item);
-        console.log(items);
         li.classList.remove('checked');
     }
 }
@@ -97,8 +97,12 @@ function deleteItem(deleteItems){
         let itemDelete = items.indexOf(deleteItems);
         delete (items[itemDelete]);
         items = items.filter(Boolean);
-        localStorage.setItem('todo', JSON.stringify(items));
+        updateItems();
     }
 }
 
+// İtems değişkeninin içindeki verileri todo anahtar kelimesi ile localStroge içine atıyoruz.
+function updateItems(){
+    localStorage.setItem('todo', JSON.stringify(items));
+}
 //localStorage.clear();
