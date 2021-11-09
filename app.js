@@ -51,8 +51,10 @@ document.querySelector('#deleteAll').onclick = function(){
 
         item.style.display = 'none'; 
         deleteItem(item.innerHTML);
+        item.classList.remove('checked');
 
     });
+    ToogleDeleteButton();
 }
 
 function createItem(item){
