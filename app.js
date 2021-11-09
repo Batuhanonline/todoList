@@ -32,14 +32,12 @@ function ToogleDeleteButton(){
 document.querySelector('#btnCreate').onclick=function(){
 
     var item = document.querySelector('#txtItem').value;
-    
+    // btnCreate basıldığı zaman txtItem değeri boşalsın.
+    document.querySelector('#txtItem').value = '';
     if(item === ''){
         alert('Lütfen bir değer giriniz!!!');
         return;
     }
-
-    // btnCreate basıldığı zaman txtItem değeri boşalsın.
-    document.querySelector('#txtItem').value = '';
     // item diziye ekleniyor.
     items.push(item);
     createItem(item);
@@ -65,22 +63,48 @@ function createItem(item){
     li.appendChild(t);
     list.appendChild(li);
     
-    //items listesindeki listelenmiş elemanlara span nesnesi ile close ikonu ekledik
+    //items listesindeki listelenmiş elemanlara span nesnesi ile close butonu ekledik
     var span = document.createElement('span');
     var text = document.createTextNode('\u00D7');
     span.className = 'close btn btn-danger';
     span.appendChild(text);
     li.appendChild(span);
 
-    // List elemanına tıklandığı zaman span nesnesi aktif-daktif duruma geçiyor.
-    li.onclick = function(){
+    //items listesindeki listelenmiş elemanlara span nesnesi ile edit butonu ekledik
+    var editSpan = document.createElement('span');
+    var editText = document.createTextNode('<@>');
+    editSpan.className = 'edit btn btn-warning';
+    editSpan.appendChild(editText);
+    li.appendChild(editSpan);
+
+
+    ////////////////////////////////
+    var editInput = document.createElement('input');
+    var editAdd = document.createElement('button');
+    var editAddText = document.createTextNode('>>>');
+    editAdd.className = 'editAdd btn btn-success';
+    editInput.id = 'editTxt';
+    editInput.type = 'text';
+    editInput.className = 'form-control';
+    editInput.title = 'title';
+
+    // List elemanına tıklandığı zaman span ve editSpan nesnesibi aktif-daktif duruma geçiyor.
+    li.onclick = function(item){
         
-        if(this.className === ('list-group-item')){
-            li.removeChild(span);
-            li.id = 'checked';
-        }else if(this.id === ('checked')){
-            li.appendChild(span);
-        }  
+        if(item.target.tagName=='LI'){
+            if(li.className === ('list-group-item')){
+                li.removeChild(span);
+                li.removeChild(editSpan);
+                li.id = 'checked';
+            }else if(li.id === ('checked')){
+                li.appendChild(span);
+                li.appendChild(editSpan);
+                li.id = ('');
+            }  
+        }
+        
+        
+        
     }
 
     // span nesnesine tıklanma halinde görünmez hale getirdik ve sildik.
@@ -90,8 +114,43 @@ function createItem(item){
         deleteItem(item);
         li.classList.remove('checked');
     }
+
+    //////////////////////////
+    editSpan.onclick = function(){
+
+        li.appendChild(editInput);
+        li.appendChild(editAdd);
+        editAdd.appendChild(editAddText);
+
+        if(li.className === ('list-group-item')){
+            li.removeChild(span);
+            li.removeChild(editSpan);
+            li.id = 'editMode';
+        }
+        li.removeChild(t);
+        editAdd.onclick = function(){
+            
+            
+            var itemIndex = items.indexOf(item);
+            var editItem = document.querySelector('#editTxt').value;
+            items[itemIndex] = editItem;
+            updateItems();
+            t = document.createTextNode(editItem);
+            li.appendChild(t);
+            document.querySelector('#editTxt').value = '';
+
+            if(li.id === ('editMode')){
+                li.appendChild(span);
+                li.appendChild(editSpan);
+                li.removeChild(editInput);
+                li.removeChild(editAdd);
+                li.id = '';
+            } 
+        }
+    }
 }
 
+// Seçili listeleri siler.
 function deleteItem(deleteItems){
     for(i in deleteItems){
         let itemDelete = items.indexOf(deleteItems);

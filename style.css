@@ -11,6 +11,20 @@ ul li.checked{
     padding: 3px 18px 3px 18px;
 }
 
+.edit{
+    position: absolute;
+    right: 60px;
+    top: 5px;
+    padding: 3px 6px 3px 6px;
+}
+
+.editAdd{
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    padding: 3px 18px 3px 18px;
+}
+
 #deleteAll{
     position: absolute;
     right: 5px;
