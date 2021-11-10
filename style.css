@@ -30,3 +30,10 @@ ul li.checked{
     right: 5px;
     top: 5px;
 }
+
+.complete{
+    position: absolute;
+    right: 120px;
+    top: 5px;
+    padding: 3px 6px 3px 6px;
+}

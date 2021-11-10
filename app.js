@@ -1,12 +1,21 @@
 // localStroge dan verileri alıp items değişkeninin içine ayrıştırıldı.
-var localItems = [localStorage.getItem('todo')]
+var localItems = [localStorage.getItem('todo')];
 var items = JSON.parse(localItems);
+
+//////////////
+var localComplateItems = [localStorage.getItem('complateTodo')];
+var complateItems = JSON.parse(localComplateItems);
 
 // myList sınıfından list değişkeni ile eşitledik.
 var list = document.querySelector('#myList');
 // Cookies deki veriler çıktı verildi.
 items.forEach(function(item){   
     createItem(item);
+});
+
+//////////////////
+complateItems.forEach(function(item){
+    completeItem(item);
 });
 
 // listelenmiş olan itemler üzerine tıklanma halinde -checked- sınıfını ekleme yaptık.
@@ -90,6 +99,13 @@ function createItem(item){
     editInput.className = 'form-control';
     editInput.title = 'title';
 
+    ///////////////////
+    var completedSpan = document.createElement('span');
+    completedText = document.createTextNode('CV');
+    completedSpan.className = 'complete btn btn-success';
+    completedSpan.appendChild(completedText);
+    li.appendChild(completedSpan);
+
     // List elemanına tıklandığı zaman span ve editSpan nesnesibi aktif-daktif duruma geçiyor.
     li.onclick = function(item){
         
@@ -115,6 +131,15 @@ function createItem(item){
         li.style.display = 'none';
         deleteItem(item);
         li.classList.remove('checked');
+    }
+
+    completedSpan.onclick = function(){
+
+        complateItems.push(item);
+        var li = this.parentElement;
+        li.style.display = 'none';
+        deleteItem(item);
+        completeItem(item);
     }
 
     //////////////////////////
@@ -152,6 +177,34 @@ function createItem(item){
     }
 }
 
+//////////////////////////////////////
+function completeItem(item){
+    var completeLi = document.createElement('li');
+    completeLi.className = 'list-group-item';
+    var completeLiTxt = document.createTextNode(item);
+    var comLi = document.getElementById('completedList');
+    completeLi.appendChild(completeLiTxt);
+    comLi.appendChild(completeLi);
+
+    var completeDel = document.createElement('span');
+    var completeDelTxt = document.createTextNode('x');
+    completeDel.className = 'close btn btn-danger';
+    completeDel.appendChild(completeDelTxt);
+    completeLi.appendChild(completeDel);
+
+    completeDel.onclick = function(){
+
+        var li = this.parentElement;
+        li.style.display = 'none';
+        deleteCompleteItem(item);
+
+    }
+    
+    updateComplateItems();
+    console.log(complateItems);
+
+}
+
 // Seçili listeleri siler.
 function deleteItem(deleteItems){
     for(i in deleteItems){
@@ -162,8 +215,22 @@ function deleteItem(deleteItems){
     }
 }
 
+function deleteCompleteItem(deleteItems){
+
+    for(i in deleteItems){
+        let itemDelete = complateItems.indexOf(deleteItems);
+        delete (complateItems[itemDelete]);
+        complateItems = complateItems.filter(Boolean);
+        updateComplateItems();
+    }
+}
+
 // İtems değişkeninin içindeki verileri todo anahtar kelimesi ile localStroge içine atıyoruz.
 function updateItems(){
     localStorage.setItem('todo', JSON.stringify(items));
+}
+
+function updateComplateItems(){
+    localStorage.setItem('complateTodo', JSON.stringify(complateItems));
 }
 //localStorage.clear();
