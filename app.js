@@ -88,8 +88,7 @@ function createItem(item){
     editSpan.appendChild(editText);
     li.appendChild(editSpan);
 
-
-    ////////////////////////////////
+    //Düzenleme inputu ve butonu tanımlanıyor 
     var editInput = document.createElement('input');
     var editAdd = document.createElement('button');
     var editAddText = document.createTextNode('>>>');
@@ -99,7 +98,7 @@ function createItem(item){
     editInput.className = 'form-control';
     editInput.title = 'title';
 
-    ///////////////////
+    //Tamamlanmış yapılacaklar butonu tanımlanıp atanıyor.
     var completedSpan = document.createElement('span');
     completedText = document.createTextNode('CV');
     completedSpan.className = 'complete btn btn-success';
@@ -120,9 +119,6 @@ function createItem(item){
                 li.id = ('');
             }  
         }
-        
-        
-        
     }
 
     // span nesnesine tıklanma halinde görünmez hale getirdik ve sildik.
@@ -133,6 +129,7 @@ function createItem(item){
         li.classList.remove('checked');
     }
 
+    //completedSpan nesnesine tıklandığında itemi tamamlananlar listesine atıyor. yapılacaklardan gizliyor ve siliyor.
     completedSpan.onclick = function(){
 
         complateItems.push(item);
@@ -142,7 +139,7 @@ function createItem(item){
         completeItem(item);
     }
 
-    //////////////////////////
+    //editSpan nesnesine tıklandığında edit nesnelerini atayıp span ve editSpan nesnelerini düşürüyor.
     editSpan.onclick = function(){
 
         li.appendChild(editInput);
@@ -155,8 +152,8 @@ function createItem(item){
             li.id = 'editMode';
         }
         li.removeChild(t);
+        //editAdd nesnesine tıklandığında itemi güncelliyor
         editAdd.onclick = function(){
-            
             
             var itemIndex = items.indexOf(item);
             var editItem = document.querySelector('#editTxt').value;
@@ -165,7 +162,8 @@ function createItem(item){
             t = document.createTextNode(editItem);
             li.appendChild(t);
             document.querySelector('#editTxt').value = '';
-
+            
+            //editMode dan çıkış yapılıyor.
             if(li.id === ('editMode')){
                 li.appendChild(span);
                 li.appendChild(editSpan);
@@ -177,7 +175,7 @@ function createItem(item){
     }
 }
 
-//////////////////////////////////////
+//Tamamlananların nesneleri oluşturuluyor.
 function completeItem(item){
     var completeLi = document.createElement('li');
     completeLi.className = 'list-group-item';
@@ -192,17 +190,30 @@ function completeItem(item){
     completeDel.appendChild(completeDelTxt);
     completeLi.appendChild(completeDel);
 
+    var completeBack = document.createElement('span');
+    completeBack.className = 'completeBack btn btn-outline-warning';
+    var completeBackText = document.createTextNode('^');
+    completeBack.appendChild(completeBackText);
+    completeLi.appendChild(completeBack);
+
     completeDel.onclick = function(){
 
         var li = this.parentElement;
         li.style.display = 'none';
         deleteCompleteItem(item);
+    }
 
+    completeBack.onclick = function(){
+
+        var li = this.parentElement;
+        li.style.display = 'none';
+        deleteCompleteItem(item);
+        createItem(item);
+        items.push(item);
+        updateItems();
     }
     
     updateComplateItems();
-    console.log(complateItems);
-
 }
 
 // Seçili listeleri siler.
@@ -215,6 +226,7 @@ function deleteItem(deleteItems){
     }
 }
 
+//gelen itemleri completeitem listesinden silip güncelliyor.
 function deleteCompleteItem(deleteItems){
 
     for(i in deleteItems){
